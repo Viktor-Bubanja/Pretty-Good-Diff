@@ -1,7 +1,7 @@
 from typing import Optional
 
 
-def get_diff(first_dict: dict, second_dict: dict, output_dict: Optional[dict] = None, sentinel = None) -> dict:
+def get_diff(first_dict: dict, second_dict: dict, output_dict: Optional[dict] = None, sentinel = object()) -> dict:
     if output_dict is None:
         output_dict = {}
 
