@@ -6,7 +6,7 @@ from src.output import output
 from src.sentinel import sentinel
 
 
-def main(first_object, second_object):
+def print_diff(first_object, second_object):
     diff = get_diff(first_object, second_object)
     output(diff)
 
@@ -19,7 +19,7 @@ def get_diff(first_object, second_object):
         first_dict, second_dict = first_object, second_object
     elif isinstance(first_object, BaseModel):
         first_dict, second_dict = first_object.dict(), second_object.dict()
-    elif input_type == str:  # TODO: check if input str is JSON, if not, compare strings
+    elif input_type == str:
         try:
             first_dict, second_dict = loads(first_object), loads(second_object)
         except JSONDecodeError:
