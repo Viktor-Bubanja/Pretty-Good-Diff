@@ -2,14 +2,14 @@ import json
 from typing import Optional
 from src.main import get_diff, main
 from pydantic import BaseModel
+from src.sentinel import sentinel
 
 
 def test_get_diff_finds_differences_in_nested_dictionaries():
-    sentinel = object()
     dictionary_1 = {"a": 123, "b": {"c": "zzz", "d": "xxx", "e": {"f": None, "g": 6, "h": 5}}, "i": 456, "j": 1}
     dictionary_2 = {"a": 123, "b": {"c": "zzz", "d": "yyy", "e": {"f": 4, "g": 6}}, "i": 789, "k": 2}
 
-    difference = get_diff(dictionary_1, dictionary_2, sentinel)
+    difference = get_diff(dictionary_1, dictionary_2)
     expected_difference = {
         "b": {
             "d": ("xxx", "yyy"),
@@ -26,8 +26,6 @@ def test_get_diff_finds_differences_in_nested_dictionaries():
 
 
 def test_get_diff_finds_differences_in_json_objects():
-    sentinel = object()
-
     json_1 = json.dumps(
         {
             "a": "abc",
@@ -48,7 +46,7 @@ def test_get_diff_finds_differences_in_json_objects():
         }
     )
 
-    difference = get_diff(json_1, json_2, sentinel)
+    difference = get_diff(json_1, json_2)
     expected_difference = {
         "a": ("abc", "tuv"),
         "b": {
@@ -59,7 +57,6 @@ def test_get_diff_finds_differences_in_json_objects():
     assert difference == expected_difference
 
 def test_get_diff_finds_differences_in_nested_pydantic_objects():
-    sentinel = object()
     class SomeNestedClass(BaseModel):
         c: str
         d: int
@@ -71,7 +68,7 @@ def test_get_diff_finds_differences_in_nested_pydantic_objects():
     obj_1 = SomeClass(a="abc", b=SomeNestedClass(c="def", d=123, e="xxx"))
     obj_2 = SomeClass(a="tuv", b=SomeNestedClass(c="ghi", d=123))
 
-    difference = get_diff(obj_1, obj_2, sentinel)
+    difference = get_diff(obj_1, obj_2)
     expected_difference = {
         "a": ("abc", "tuv"),
         "b": {
@@ -83,11 +80,9 @@ def test_get_diff_finds_differences_in_nested_pydantic_objects():
 
 
 def test_get_diff_finds_differences_in_strings():
-    sentinel = object()
-
     str_1 = "abcdefghijklmnop12345"
     str_2 = "abcdexghiyzlmnop23345"
-    difference = get_diff(str_1, str_2, sentinel)
+    difference = get_diff(str_1, str_2)
     assert difference == [
         ["abcde", "abcde"],
         ["f", "x"],
@@ -100,7 +95,6 @@ def test_get_diff_finds_differences_in_strings():
 
 
 def test_main():
-    sentinel = object()
     expected_body = {
         "uid": "79da3ec3-d5bb-49f1-842a-8561b02bf006",
         "created_at": "2022-05-10T14:00:10.961047+00:00",
@@ -233,4 +227,4 @@ def test_main():
         "working_from_home": None,
         "job_type": {"codename": "other", "localized_keywords": None, "localized_synonyms": None, "localized_name": "Andere"},
     }
-    main(actual, expected_body, sentinel)
+    main(actual, expected_body)

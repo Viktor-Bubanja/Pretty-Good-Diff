@@ -3,14 +3,15 @@ from json.decoder import JSONDecodeError
 from pydantic import BaseModel
 from typing import Optional
 from src.output import output
+from src.sentinel import sentinel
 
 
-def main(first_object, second_object, sentinel = object()):
-    diff = get_diff(first_object, second_object, sentinel)
-    output(diff, sentinel)
+def main(first_object, second_object):
+    diff = get_diff(first_object, second_object)
+    output(diff)
 
 
-def get_diff(first_object, second_object, sentinel = object()):
+def get_diff(first_object, second_object):
     input_type = type(first_object)
     assert input_type == type(second_object)
 
@@ -26,10 +27,10 @@ def get_diff(first_object, second_object, sentinel = object()):
     else:
         raise NotImplementedError
 
-    return _get_dict_diff(first_dict, second_dict, {}, sentinel)
+    return _get_dict_diff(first_dict, second_dict, {})
 
 
-def _get_dict_diff(first_dict: dict, second_dict: dict, output_dict: Optional[dict] = None, sentinel = object()) -> dict:
+def _get_dict_diff(first_dict: dict, second_dict: dict, output_dict: Optional[dict] = None) -> dict:
     if output_dict is None:
         output_dict = {}
 
@@ -40,7 +41,7 @@ def _get_dict_diff(first_dict: dict, second_dict: dict, output_dict: Optional[di
         if first_value != second_value:
             if isinstance(first_value, dict) and isinstance(second_value, dict):
                 output_dict[key] = {}
-                output_dict[key] = _get_dict_diff(first_value, second_value, output_dict[key], sentinel)
+                output_dict[key] = _get_dict_diff(first_value, second_value, output_dict[key])
             else:
                 output_dict[key] = (first_value, second_value)
 
