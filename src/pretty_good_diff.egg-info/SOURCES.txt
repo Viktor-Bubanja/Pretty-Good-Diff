@@ -1,0 +1,11 @@
+LICENSE.txt
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+src/pretty_good_diff.egg-info/PKG-INFO
+src/pretty_good_diff.egg-info/SOURCES.txt
+src/pretty_good_diff.egg-info/dependency_links.txt
+src/pretty_good_diff.egg-info/requires.txt
+src/pretty_good_diff.egg-info/top_level.txt
+tests/test_main.py
