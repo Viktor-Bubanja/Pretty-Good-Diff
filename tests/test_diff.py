@@ -80,18 +80,60 @@ def test_get_diff_finds_differences_in_nested_pydantic_objects():
 
 
 def test_get_diff_finds_differences_in_strings():
-    str_1 = "abcdefghijklmnop12345"
-    str_2 = "abcdexghiyzlmnop23345"
+    str_1 = "SAMATY"
+    str_2 = "SAMSAMANTH"
     difference = get_diff(str_1, str_2)
     assert difference == [
-        ["abcde", "abcde"],
-        ["f", "x"],
-        ["ghi", "ghi"],
-        ["jk", "yz"],
-        ["lmnop", "lmnop"],
-        ["12", "23"],
-        ["345", "345"]
+        ["SAM", "SAM"],
+        ["", "S"],
+        ["A", "A"],
+        ["", "MAN"],
+        ["T", "T"],
+        ["Y", ""],
+        ["", "H"]
     ]
+
+def test_get_diff_finds_differences_in_strings_numbers():
+    str_1 = "12345"
+    str_2 = "12845"
+    difference = get_diff(str_1, str_2)
+    assert difference == [["12", "12"], ["3", ""], ["8", ""], ["45", ]]
+
+
+
+def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_substrings_arguments_passed():
+    first_dict = {
+        "id": "12345",
+        "location": {
+            "street_name": "Totally real street name",
+            "street_number": "27",
+        },
+        "description": {"en": None, "de": "Some really long description that is different."},
+    }
+
+    second_dict = {
+        "id": "12845",
+        "location": {
+            "street_name": "Totally real street name st",
+            "street_number": "27",
+        },
+        "description": {"en": None, "de": "Some really long description that is different"},
+    } 
+
+    difference = get_diff(first_dict, second_dict, matching_substrings=True)
+
+    expected_difference = {
+        "id": [["12", "12"], ["3", ""], ["", "8"], ["45", "45"]],
+        "location": {
+            "street_name": [["Totally real street name", "Totally real street name"], ['', " st"]],
+        },
+        "description": {
+            "de": [["Some really long description that is different", "Some really long description that is different"], [".", '']]
+        },
+    }
+
+    breakpoint()
+    assert difference == expected_difference
 
 
 def test_main():
@@ -140,4 +182,4 @@ def test_main():
         "middle_name": "Decent",
         "age": 99
     }
-    print_diff(actual, expected_body)
+    print_diff(actual, expected_body, True)
