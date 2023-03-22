@@ -39,17 +39,49 @@ def output_dict_diff2(output_dict: dict, indent = 0) -> None:
         else:
             output_str_diff(value)
 
-
-def output_str_diff(substrings: list) -> None:
+def output_str_diff(first_object, second_object, substrings: list) -> None:
+    breakpoint()
     diff = ""
-    print(substrings)
-    for first_sub, second_sub in substrings:
-        if first_sub == second_sub:
-            diff += _pale_green_output(first_sub)
+    mapped_indices_from_first_obj = set(chain(*[sub[1][0] for sub in substrings]))
+
+    for i, (x, y) in enumerate(zip_longest(first_object, second_object)):
+        if i in mapped_indices_from_first_obj:
+            diff += _pale_green_output(x)
         else:
-            diff += f"{_blue_output(first_sub)}{_purple_output(second_sub)}"
+            if x:
+                diff += _blue_output(x)
+            if y:
+                diff += _purple_output(y)
+
     print(diff)
 
+
+def alternating_matching_and_unmatching_substrings(first_object, second_object, substrings: list) -> list:
+    mapped_indices_from_first_obj = [sub[1][0] for sub in substrings]
+    unmapped_indices_from_first_obj = []
+    previous_mapping = mapped_indices_from_first_obj[0]
+    for mapping in mapped_indices_from_first_obj:
+        start_index = previous_mapping[-1] + 1 if unmapped_indices_from_first_obj else 0
+        unmapped = list(range(start_index, mapping[0]))
+        previous_mapping = mapping
+        unmapped_indices_from_first_obj.append(unmapped)
+    if unmapped_indices_from_first_obj[-1][-1] < len(second_object):
+        unmapped_indices_from_first_obj.append(list(range(mapped_indices_from_first_obj[-1][-1] + 1, len(first_object))))
+    print(unmapped_indices_from_first_obj)
+
+    mapped_indices_from_second_obj = [sub[1][1] for sub in substrings]
+    unmapped_indices_from_second_obj = []
+    previous_mapping = mapped_indices_from_second_obj[0]
+    for mapping in mapped_indices_from_second_obj:
+        start_index = previous_mapping[-1] + 1 if unmapped_indices_from_second_obj else 0
+        unmapped = list(range(start_index, mapping[0]))
+        previous_mapping = mapping
+        unmapped_indices_from_second_obj.append(unmapped)
+    if unmapped_indices_from_second_obj[-1][-1] < len(second_object):
+        unmapped_indices_from_second_obj.append(list(range(mapped_indices_from_second_obj[-1][-1] + 1, len(second_object))))
+    print(unmapped_indices_from_second_obj)
+
+alternating_matching_and_unmatching_substrings("Y123345", "1288845W", [['12', [[1, 2], [0, 1]]], ['45', [[5, 6], [5, 6]]]])
 
 def _yellow_output(value):
     return _colored_output(value, "93m")
