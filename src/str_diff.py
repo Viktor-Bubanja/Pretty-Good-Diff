@@ -25,7 +25,8 @@ def _convert_diff_to_substrings(first_str, second_str, diff):
     if first_substrings[0] == "" and second_substrings[0] == "":
         first_substrings = first_substrings[1:]
         second_substrings = second_substrings[1:]
-    return list(zip_longest(first_substrings, second_substrings, fillvalue=""))
+    substrings = list(zip_longest(first_substrings, second_substrings, fillvalue=""))
+    return [sub for sub in substrings if sub != ("", "")]
 
 
 def _calculate_substrings(string, substring_indexes):
@@ -65,28 +66,19 @@ def _calculate_diff(first_str, second_str):
             i_first += 1
             i_second += 1
             if i_first == len(first_str) and not first_str_done:
-                if worse_substring := _worse_overlapping_substring(output, mappings):
-                    output.remove(worse_substring)
-                if not _better_overlapping_substring(output, mappings):
-                    output.append(mappings)
+                _handle_overlapping_substrings(output, mappings)
                 i_first = 0
                 first_str_done = True
                 matching = False
                 mappings = ([], [])
             elif i_second == len(second_str) and not second_str_done:
-                if worse_substring := _worse_overlapping_substring(output, mappings):
-                    output.remove(worse_substring)
-                if not _better_overlapping_substring(output, mappings):
-                    output.append(mappings)
+                _handle_overlapping_substrings(output, mappings)
                 i_second = 0
                 second_str_done = True
                 matching = False
                 mappings = ([], [])
         elif not matching and previously_matching:
-            if worse_substring := _worse_overlapping_substring(output, mappings):
-                output.remove(worse_substring)
-            if not _better_overlapping_substring(output, mappings):
-                output.append(mappings)
+            _handle_overlapping_substrings(output, mappings)
             i_second = 0
             matching = False
             mappings = ([], [])
@@ -114,12 +106,49 @@ def _calculate_diff(first_str, second_str):
     return output
 
 
+def _handle_overlapping_substrings(output, mappings):
+    if worse_substring := _worse_overlapping_substring(output, mappings):
+        output.remove(worse_substring)
+    if not (overlapping_substring := _better_overlapping_substring(output, mappings)):
+        output.append(mappings)
+    else:
+        non_overlapping_mappings = _find_non_overlapping_portion(
+            overlapping_substring, mappings
+        )
+        if any(mapping for mapping in non_overlapping_mappings):
+            output.append(non_overlapping_mappings)
+
+
 def _better_overlapping_substring(output, substring):
     return _overlapping_substring(output, substring, lambda x, y: x >= y)
 
 
 def _worse_overlapping_substring(output, substring):
     return _overlapping_substring(output, substring, lambda x, y: x < y)
+
+
+def _find_non_overlapping_portion(overlapping_substring, mappings):
+    if overlapping_substring == mappings:
+        return None, None
+    first_substr_indexes, second_substr_indexes = overlapping_substring
+    first_mapping_indexes, second_mapping_indexes = mappings
+    first_overlapping_indexes = {
+        i for i in first_mapping_indexes for j in first_substr_indexes if i == j
+    }
+    second_overlapping_indexes = {
+        i for i in second_mapping_indexes for j in second_substr_indexes if i == j
+    }
+    first_output_mapping, second_output_mapping = None, None
+
+    if first_overlapping_indexes & set(first_mapping_indexes):
+        index = first_mapping_indexes.index(max(first_overlapping_indexes))
+        first_output_mapping = first_mapping_indexes[index + 1 :]
+        second_output_mapping = second_mapping_indexes[index + 1 :]
+    if second_overlapping_indexes & set(second_mapping_indexes):
+        index = second_mapping_indexes.index(max(second_overlapping_indexes))
+        first_output_mapping = first_mapping_indexes[index + 1 :]
+        second_output_mapping = second_mapping_indexes[index + 1 :]
+    return (first_output_mapping, second_output_mapping)
 
 
 def _overlapping_substring(output, substring, func):
@@ -148,7 +177,7 @@ def _mappings_overlap(existing_mapping, new_mapping):
         )
         or (
             existing_mapping[0][0] > new_mapping[0][0]
-            and existing_mapping[1][0] < new_mapping[1][0]
+            and existing_mapping[1][0] < (new_mapping[1][0])
         )
     ):
         return True

@@ -79,7 +79,7 @@ def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_s
         },
         "description": {
             "en": None,
-            "de": "Some really long description that is different.",
+            "de": "Some really long description that is diff",
         },
     }
 
@@ -91,7 +91,7 @@ def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_s
         },
         "description": {
             "en": None,
-            "de": "Some really long description that is different",
+            "de": "A really really long description that is different",
         },
     }
 
@@ -107,11 +107,12 @@ def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_s
         },
         "description": {
             "de": [
+                ("Some ", "A really "),
                 (
-                    "Some really long description that is different",
-                    "Some really long description that is different",
+                    "really long description that is diff",
+                    "really long description that is diff",
                 ),
-                (".", ""),
+                ("", "erent"),
             ]
         },
     }
@@ -121,54 +122,14 @@ def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_s
 
 def test_main():
     expected_body = {
-        "uid": "54ea99ab-fa4c-4fc9-b586-0a6e7fb09793",
-        "created_at": "2022-05-10T14:00:10.961047+00:00",
-        "updated_at": "2022-10-25T15:15:33.075228+00:00",
-        "location": {
-            "address": "Some address",
-            "street_name": "Totally real street name",
-            "street_number": "27",
-            "city": "Berlin",
-            "country_code": "de",
-            "postal_code": "10179",
-        },
-        "logo_url": "https://logos_r_us.com/123",
         "description": {
-            "en": None,
-            "de": "Some really long description that is a little different to the second one",
+            "de": "descri a little diff",
         },
-        "language": "de",
-        "posting_publish_time": "2022-06-10T14:01:11.969763+00:00",
-        "source": None,
-        "first_name": "Pretty",
-        "last_name": "Good",
-        "middle_name": "Decent",
-        "age": 99,
     }
 
     actual = {
-        "uid": "59cc1582-ed76-40cd-9a21-25802129b3b5",
-        "created_at": "2023-05-10T14:00:10.961047+00:00",
-        "updated_at": "2022-10-25T15:15:33.075229+00:00",
-        "location": {
-            "address": "Some address",
-            "street_name": "Totally real street name st",
-            "street_number": "27",
-            "city": "Berlin",
-            "country_code": "de",
-            "postal_code": "10179",
-        },
-        "logo_url": "https://logos_r_us.com/88",
         "description": {
-            "en": None,
-            "de": "Some really long description that is different to the first one",
+            "de": "descri diff",
         },
-        "language": "de",
-        "posting_publish_time": "2022-06-10T14:01:11.969763+00:00",
-        "source": None,
-        "first_name": "Pretty",
-        "last_name": "Good",
-        "middle_name": "Decent",
-        "age": 99,
     }
-    show_diff(actual, expected_body)
+    show_diff(actual, expected_body, matching_substrings=True)
