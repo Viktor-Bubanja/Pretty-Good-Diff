@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.diff import get_diff, print_diff
+from src.diff import get_diff, show_diff
 from src.sentinel import sentinel
 
 
@@ -156,4 +156,4 @@ def test_main():
         "middle_name": "Decent",
         "age": 99,
     }
-    print_diff(actual, expected_body)
+    show_diff(actual, expected_body)

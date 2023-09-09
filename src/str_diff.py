@@ -1,7 +1,7 @@
 from itertools import zip_longest
 
 
-def get_diff(first_str: str, second_str: str) -> list[str]:
+def get_diff(first_str, second_str):
     first_option = _calculate_diff(first_str, second_str)
     second_option = _calculate_diff(second_str, first_str)
 
@@ -17,9 +17,7 @@ def get_diff(first_str: str, second_str: str) -> list[str]:
     return _convert_diff_to_substrings(first_str, second_str, diff)
 
 
-def _convert_diff_to_substrings(
-    first_str: str, second_str: str, diff: list[str]
-) -> list[str]:
+def _convert_diff_to_substrings(first_str, second_str, diff):
     first_str_diff = [substring_indexes[0] for substring_indexes in diff]
     second_str_diff = [substring_indexes[1] for substring_indexes in diff]
     first_substrings = _calculate_substrings(first_str, first_str_diff)
@@ -27,7 +25,7 @@ def _convert_diff_to_substrings(
     return list(zip_longest(first_substrings, second_substrings, fillvalue=""))
 
 
-def _calculate_substrings(string: str, substring_indexes: list[str]) -> list[str]:
+def _calculate_substrings(string, substring_indexes):
     substrings = []
     lowest_index = 0
     highest_index = len(string) - 1
@@ -41,7 +39,12 @@ def _calculate_substrings(string: str, substring_indexes: list[str]) -> list[str
     return substrings
 
 
-def _calculate_diff(first_str: str, second_str: str) -> list[str]:
+def _calculate_diff(first_str, second_str):
+    """
+    This function calculates a set of matching substrings between two strings where
+    the number of matching characters is maximized and the substrings do not overlap.
+    I'm sure there is a cleaner and more efficient way to do this, but this works for now.
+    """
     i_first, i_second = 0, 0
     output = []
     mappings = ([], [])

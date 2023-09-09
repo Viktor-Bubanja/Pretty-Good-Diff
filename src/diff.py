@@ -1,6 +1,5 @@
 from json import loads
 from json.decoder import JSONDecodeError
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -9,38 +8,42 @@ from src.sentinel import sentinel
 from src.str_diff import get_diff as get_str_diff
 
 
-def print_diff(first_object, second_object, matching_substrings=False):
+def show_diff(first_object, second_object, matching_substrings=False):
+    """
+    Given two objects of the same type, print the differences between them.
+    If matching_substrings is False, when comparing two different strings, it will print both
+    objects. When matching_substrings is True, it will print one string where the differences
+    between the two strings are highlighted.
+    """
     diff = get_diff(first_object, second_object, matching_substrings)
-    output(first_object, second_object, diff, matching_substrings)
+    output(diff, matching_substrings)
 
 
 def get_diff(first_object, second_object, matching_substrings=False):
+    """
+    Given two objects of the same type, return the differences between them.
+    """
     input_type = type(first_object)
     assert input_type == type(second_object)
 
     if input_type == dict:
-        first_dict, second_dict = first_object, second_object
+        return _get_dict_diff(first_object, second_object, {}, matching_substrings)
     elif isinstance(first_object, BaseModel):
         first_dict, second_dict = first_object.dict(), second_object.dict()
+        return _get_dict_diff(first_dict, second_dict, {}, matching_substrings)
     elif input_type == str:
         if first_object.isnumeric() or second_object.isnumeric():
             return get_str_diff(first_object, second_object)
         try:
             first_dict, second_dict = loads(first_object), loads(second_object)
+            return _get_dict_diff(first_dict, second_dict, {}, matching_substrings)
         except JSONDecodeError:
             return get_str_diff(first_object, second_object)
     else:
         raise NotImplementedError
 
-    return _get_dict_diff(first_dict, second_dict, {}, matching_substrings)
 
-
-def _get_dict_diff(
-    first_dict: dict,
-    second_dict: dict,
-    output_dict: Optional[dict] = None,
-    matching_substrings=False,
-) -> dict:
+def _get_dict_diff(first_dict, second_dict, output_dict, matching_substrings=False):
     if output_dict is None:
         output_dict = {}
 

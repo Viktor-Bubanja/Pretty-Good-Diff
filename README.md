@@ -2,9 +2,9 @@
 
 Pretty Good Diff is a tool that allows users to compare two objects and see a highlight of the differences between them. It works with strings, dictionaries, and Pydantic objects.
 
-## print_diff
+## show_diff
 
-Just call `print_diff(first_object, second_object)` to see a colored diff of the input objects.
+Just call `show_diff(first_object, second_object)` to see a colored diff of the input objects.
 
 Before:
 ![alt text](blob/ugly_diff.png?raw=true)

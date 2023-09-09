@@ -1,11 +1,18 @@
+from src.colors import *
 from src.sentinel import sentinel
 
 INDENT_SIZE = 4
 
 
-def output(first_object, second_object, diff, matching_substrings=False):
+def output(diff, matching_substrings=False):
+    """
+    Given the difference between two objects, output the difference to the console.
+    If matching_substrings is False, when comparing two different strings, it will print both
+    objects. When matching_substrings is True, it will print one string where the differences
+    between the two strings are highlighted.
+    """
     print(
-        f"\n{_blue_background_output('actual')} vs {_purple_background_output('expected')}\n\n"
+        f"\n{_colored_output('actual', BLUE_BACKGROUND)} vs {_colored_output('expected', PURPLE_BACKGROUND)}\n\n"
     )
     if type(diff) == dict:
         output_dict_diff(diff, 0, matching_substrings)
@@ -13,77 +20,51 @@ def output(first_object, second_object, diff, matching_substrings=False):
         output_str_diff(diff)
 
 
-def output_dict_diff(
-    output_dict: dict, indent: int = 0, matching_substrings: bool = False
-) -> None:
-    missing_message = _red_output("<missing>")
+def output_dict_diff(output_dict, indent=0, matching_substrings=False):
+    missing_message = _colored_output("<missing>", RED)
 
     for key, value in output_dict.items():
         if type(value) == dict:
-            print(indent * " " + _yellow_output(key))
+            print(indent * " " + _colored_output(key, YELLOW))
             output_dict_diff(value, (indent + INDENT_SIZE), matching_substrings)
         else:
             if matching_substrings:
-                print(indent * " " + _yellow_output(key))
+                print(indent * " " + _colored_output(key, YELLOW))
                 output_str_diff(value, indent=indent + INDENT_SIZE)
             else:
                 first_obj, second_obj = value
                 actual_output = (
                     missing_message
                     if first_obj is sentinel
-                    else _blue_background_output(first_obj)
+                    else _colored_output(first_obj, BLUE_BACKGROUND)
                 )
                 expected_output = (
                     missing_message
                     if second_obj is sentinel
-                    else _purple_background_output(second_obj)
+                    else _colored_output(second_obj, PURPLE_BACKGROUND)
                 )
 
                 out_string = "{}: {} {}".format(
-                    _yellow_output(key), actual_output, expected_output
+                    _colored_output(key, YELLOW), actual_output, expected_output
                 )
                 print(indent * " " + out_string)
 
 
-def output_str_diff(substring_pairs: list, indent: int = 0) -> None:
+def output_str_diff(substring_pairs, indent=0):
     diff = " " * indent
     for substring_1, substring_2 in substring_pairs:
         if substring_1 == substring_2:
-            diff += _pale_green_output(substring_1)
+            diff += _colored_output(substring_1, PALE_GREEN)
         else:
-            diff += _red_output(substring_1)
+            diff += _colored_output(substring_1, RED)
     print(diff)
     diff = " " * indent
     for substring_1, substring_2 in substring_pairs:
         if substring_1 == substring_2:
-            diff += _pale_green_output(substring_2)
+            diff += _colored_output(substring_2, PALE_GREEN)
         else:
-            diff += _purple_output(substring_2)
+            diff += _colored_output(substring_2, PURPLE)
     print(diff)
-
-
-def _yellow_output(value):
-    return _colored_output(value, "93m")
-
-
-def _purple_background_output(value):
-    return _colored_output(value, "45m")
-
-
-def _blue_background_output(value):
-    return _colored_output(value, "44m")
-
-
-def _purple_output(value):
-    return _colored_output(value, "35m")
-
-
-def _red_output(value):
-    return _colored_output(value, "31m")
-
-
-def _pale_green_output(value):
-    return _colored_output(value, "92m")
 
 
 def _colored_output(value, color_symbol):
