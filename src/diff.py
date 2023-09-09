@@ -7,12 +7,12 @@ from src.sentinel import sentinel
 from src.str_diff import get_diff as get_str_diff
 
 
-def print_diff(first_object, second_object, matching_substrings = False):
+def print_diff(first_object, second_object, matching_substrings=False):
     diff = get_diff(first_object, second_object, matching_substrings)
-    output(diff, matching_substrings)
+    output(first_object, second_object, diff, matching_substrings)
 
 
-def get_diff(first_object, second_object, matching_substrings = False):
+def get_diff(first_object, second_object, matching_substrings=False):
     input_type = type(first_object)
     assert input_type == type(second_object)
 
@@ -33,7 +33,12 @@ def get_diff(first_object, second_object, matching_substrings = False):
     return _get_dict_diff(first_dict, second_dict, {}, matching_substrings)
 
 
-def _get_dict_diff(first_dict: dict, second_dict: dict, output_dict: Optional[dict] = None, matching_substrings = False) -> dict:
+def _get_dict_diff(
+    first_dict: dict,
+    second_dict: dict,
+    output_dict: Optional[dict] = None,
+    matching_substrings=False,
+) -> dict:
     if output_dict is None:
         output_dict = {}
 
@@ -44,10 +49,14 @@ def _get_dict_diff(first_dict: dict, second_dict: dict, output_dict: Optional[di
         if first_value != second_value:
             if isinstance(first_value, dict) and isinstance(second_value, dict):
                 output_dict[key] = {}
-                output_dict[key] = _get_dict_diff(first_value, second_value, output_dict[key], matching_substrings)
+                output_dict[key] = _get_dict_diff(
+                    first_value, second_value, output_dict[key], matching_substrings
+                )
             else:
-                output_dict[key] = get_str_diff(first_value, second_value) if matching_substrings else (first_value, second_value)
+                output_dict[key] = (
+                    get_str_diff(first_value, second_value)
+                    if matching_substrings
+                    else (first_value, second_value)
+                )
 
     return output_dict
-
- 

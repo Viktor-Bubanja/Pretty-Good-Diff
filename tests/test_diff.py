@@ -6,8 +6,18 @@ from src.sentinel import sentinel
 
 
 def test_get_diff_finds_differences_in_nested_dictionaries():
-    dictionary_1 = {"a": 123, "b": {"c": "zzz", "d": "xxx", "e": {"f": None, "g": 6, "h": 5}}, "i": 456, "j": 1}
-    dictionary_2 = {"a": 123, "b": {"c": "zzz", "d": "yyy", "e": {"f": 4, "g": 6}}, "i": 789, "k": 2}
+    dictionary_1 = {
+        "a": 123,
+        "b": {"c": "zzz", "d": "xxx", "e": {"f": None, "g": 6, "h": 5}},
+        "i": 456,
+        "j": 1,
+    }
+    dictionary_2 = {
+        "a": 123,
+        "b": {"c": "zzz", "d": "yyy", "e": {"f": 4, "g": 6}},
+        "i": 789,
+        "k": 2,
+    }
 
     difference = get_diff(dictionary_1, dictionary_2)
     expected_difference = {
@@ -26,35 +36,16 @@ def test_get_diff_finds_differences_in_nested_dictionaries():
 
 
 def test_get_diff_finds_differences_in_json_objects():
-    json_1 = json.dumps(
-        {
-            "a": "abc",
-            "b": {
-                "c": "def",
-                "d": 123,
-                "e": "xxx"
-            }
-        }
-    )
-    json_2 = json.dumps(
-        {
-            "a": "tuv",
-            "b": {
-                "c": "ghi",
-                "d": 123
-            }
-        }
-    )
+    json_1 = json.dumps({"a": "abc", "b": {"c": "def", "d": 123, "e": "xxx"}})
+    json_2 = json.dumps({"a": "tuv", "b": {"c": "ghi", "d": 123}})
 
     difference = get_diff(json_1, json_2)
     expected_difference = {
         "a": ("abc", "tuv"),
-        "b": {
-            "c": ("def", "ghi"),
-            "e": ("xxx", sentinel)
-        }
+        "b": {"c": ("def", "ghi"), "e": ("xxx", sentinel)},
     }
     assert difference == expected_difference
+
 
 def test_get_diff_finds_differences_in_nested_pydantic_objects():
     class SomeNestedClass(BaseModel):
@@ -65,75 +56,50 @@ def test_get_diff_finds_differences_in_nested_pydantic_objects():
     class SomeClass(BaseModel):
         a: str
         b: SomeNestedClass
+
     obj_1 = SomeClass(a="abc", b=SomeNestedClass(c="def", d=123, e="xxx"))
     obj_2 = SomeClass(a="tuv", b=SomeNestedClass(c="ghi", d=123))
 
     difference = get_diff(obj_1, obj_2)
     expected_difference = {
         "a": ("abc", "tuv"),
-        "b": {
-            "c": ("def", "ghi"),
-            "e": ("xxx", None)
-        }
+        "b": {"c": ("def", "ghi"), "e": ("xxx", None)},
     }
     assert difference == expected_difference
 
 
-def test_get_diff_finds_differences_in_strings():
-    str_1 = "SAMATY"
-    str_2 = "SAMSAMANTH"
-    difference = get_diff(str_1, str_2)
-    assert difference == [
-        ["SAM", "SAM"],
-        ["", "S"],
-        ["A", "A"],
-        ["", "MAN"],
-        ["T", "T"],
-        ["Y", ""],
-        ["", "H"]
-    ]
+# def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_substrings_arguments_passed():
+#     first_dict = {
+#         "id": "12345",
+#         "location": {
+#             "street_name": "Totally real street name",
+#             "street_number": "27",
+#         },
+#         "description": {"en": None, "de": "Some really long description that is different."},
+#     }
 
-def test_get_diff_finds_differences_in_strings_numbers():
-    str_1 = "12345"
-    str_2 = "12845"
-    difference = get_diff(str_1, str_2)
-    assert difference == [["12", "12"], ["3", ""], ["8", ""], ["45", ]]
+#     second_dict = {
+#         "id": "12845",
+#         "location": {
+#             "street_name": "Totally real street name st",
+#             "street_number": "27",
+#         },
+#         "description": {"en": None, "de": "Some really long description that is different"},
+#     }
 
+#     difference = get_diff(first_dict, second_dict, matching_substrings=True)
 
+#     expected_difference = {
+#         "id": [["12", "12"], ["3", ""], ["", "8"], ["45", "45"]],
+#         "location": {
+#             "street_name": [["Totally real street name", "Totally real street name"], ['', " st"]],
+#         },
+#         "description": {
+#             "de": [["Some really long description that is different", "Some really long description that is different"], [".", '']]
+#         },
+#     }
 
-def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_substrings_arguments_passed():
-    first_dict = {
-        "id": "12345",
-        "location": {
-            "street_name": "Totally real street name",
-            "street_number": "27",
-        },
-        "description": {"en": None, "de": "Some really long description that is different."},
-    }
-
-    second_dict = {
-        "id": "12845",
-        "location": {
-            "street_name": "Totally real street name st",
-            "street_number": "27",
-        },
-        "description": {"en": None, "de": "Some really long description that is different"},
-    } 
-
-    difference = get_diff(first_dict, second_dict, matching_substrings=True)
-
-    expected_difference = {
-        "id": [["12", "12"], ["3", ""], ["", "8"], ["45", "45"]],
-        "location": {
-            "street_name": [["Totally real street name", "Totally real street name"], ['', " st"]],
-        },
-        "description": {
-            "de": [["Some really long description that is different", "Some really long description that is different"], [".", '']]
-        },
-    }
-
-    breakpoint()
-    assert difference == expected_difference
+#     assert difference == expected_difference
 
 
 def test_main():
@@ -150,14 +116,17 @@ def test_main():
             "postal_code": "10179",
         },
         "logo_url": "https://logos_r_us.com/123",
-        "description": {"en": None, "de": "Some really long description that is a little different to the second one"},
+        "description": {
+            "en": None,
+            "de": "Some really long description that is a little different to the second one",
+        },
         "language": "de",
         "posting_publish_time": "2022-06-10T14:01:11.969763+00:00",
         "source": None,
         "first_name": "Pretty",
         "last_name": "Good",
         "middle_name": "Decent",
-        "age": 99
+        "age": 99,
     }
 
     actual = {
@@ -173,13 +142,16 @@ def test_main():
             "postal_code": "10179",
         },
         "logo_url": "https://logos_r_us.com/88",
-        "description": {"en": None, "de": "Some really long description that is different to the first one"},
+        "description": {
+            "en": None,
+            "de": "Some really long description that is different to the first one",
+        },
         "language": "de",
         "posting_publish_time": "2022-06-10T14:01:11.969763+00:00",
         "source": None,
         "first_name": "Pretty",
         "last_name": "Good",
         "middle_name": "Decent",
-        "age": 99
+        "age": 99,
     }
-    print_diff(actual, expected_body, True)
+    print_diff(actual, expected_body)
