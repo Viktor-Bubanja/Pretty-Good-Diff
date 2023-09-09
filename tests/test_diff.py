@@ -70,38 +70,53 @@ def test_get_diff_finds_differences_in_nested_pydantic_objects():
     assert difference == expected_difference
 
 
-# def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_substrings_arguments_passed():
-#     first_dict = {
-#         "id": "12345",
-#         "location": {
-#             "street_name": "Totally real street name",
-#             "street_number": "27",
-#         },
-#         "description": {"en": None, "de": "Some really long description that is different."},
-#     }
+def test_get_diff_finds_matching_substrings_in_nested_dictionaries_if_matching_substrings_arguments_passed():
+    first_dict = {
+        "id": "12345",
+        "location": {
+            "street_name": "Totally real street name",
+            "street_number": "27",
+        },
+        "description": {
+            "en": None,
+            "de": "Some really long description that is different.",
+        },
+    }
 
-#     second_dict = {
-#         "id": "12845",
-#         "location": {
-#             "street_name": "Totally real street name st",
-#             "street_number": "27",
-#         },
-#         "description": {"en": None, "de": "Some really long description that is different"},
-#     }
+    second_dict = {
+        "id": "12845",
+        "location": {
+            "street_name": "Totally real street name st",
+            "street_number": "27",
+        },
+        "description": {
+            "en": None,
+            "de": "Some really long description that is different",
+        },
+    }
 
-#     difference = get_diff(first_dict, second_dict, matching_substrings=True)
+    difference = get_diff(first_dict, second_dict, matching_substrings=True)
 
-#     expected_difference = {
-#         "id": [["12", "12"], ["3", ""], ["", "8"], ["45", "45"]],
-#         "location": {
-#             "street_name": [["Totally real street name", "Totally real street name"], ['', " st"]],
-#         },
-#         "description": {
-#             "de": [["Some really long description that is different", "Some really long description that is different"], [".", '']]
-#         },
-#     }
+    expected_difference = {
+        "id": [("12", "12"), ("3", "8"), ("45", "45")],
+        "location": {
+            "street_name": [
+                ("Totally real street name", "Totally real street name"),
+                ("", " st"),
+            ],
+        },
+        "description": {
+            "de": [
+                (
+                    "Some really long description that is different",
+                    "Some really long description that is different",
+                ),
+                (".", ""),
+            ]
+        },
+    }
 
-#     assert difference == expected_difference
+    assert difference == expected_difference
 
 
 def test_main():

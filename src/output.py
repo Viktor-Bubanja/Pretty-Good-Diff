@@ -11,6 +11,9 @@ def output(diff, matching_substrings=False):
     objects. When matching_substrings is True, it will print one string where the differences
     between the two strings are highlighted.
     """
+    if not diff:
+        print(f"\n{_colored_output('The two objects are identical.', PALE_GREEN)}")
+        return
     print(
         f"\n{_colored_output('actual', BLUE_BACKGROUND)} vs {_colored_output('expected', PURPLE_BACKGROUND)}\n\n"
     )

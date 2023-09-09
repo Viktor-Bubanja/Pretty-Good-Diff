@@ -22,6 +22,9 @@ def _convert_diff_to_substrings(first_str, second_str, diff):
     second_str_diff = [substring_indexes[1] for substring_indexes in diff]
     first_substrings = _calculate_substrings(first_str, first_str_diff)
     second_substrings = _calculate_substrings(second_str, second_str_diff)
+    if first_substrings[0] == "" and second_substrings[0] == "":
+        first_substrings = first_substrings[1:]
+        second_substrings = second_substrings[1:]
     return list(zip_longest(first_substrings, second_substrings, fillvalue=""))
 
 
@@ -30,10 +33,12 @@ def _calculate_substrings(string, substring_indexes):
     lowest_index = 0
     highest_index = len(string) - 1
     for indexes in substring_indexes:
-        substring = string[lowest_index : indexes[0]]
-        substrings.append(substring)
+        non_matched_substring = string[lowest_index : indexes[0]]
+        substrings.append(non_matched_substring)
         lowest_index = indexes[-1] + 1
-        substrings.append(string[indexes[0] : indexes[-1] + 1])
+
+        matched_substring = string[indexes[0] : indexes[-1] + 1]
+        substrings.append(matched_substring)
     if indexes[-1] < highest_index:
         substrings.append(string[indexes[-1] + 1 : highest_index + 1])
     return substrings
@@ -99,8 +104,12 @@ def _calculate_diff(first_str, second_str):
     if not _better_overlapping_substring(output, mappings) and mappings not in output:
         output.append(mappings)
 
-    if output and output[-1] == ([], []):
-        output = output[:-1]
+    if output:
+        empty_matched_substring = ([], [])
+        if output[0] == empty_matched_substring:
+            output = output[1:]
+        if output[-1] == empty_matched_substring:
+            output = output[:-1]
 
     return output
 
