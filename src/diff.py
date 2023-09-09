@@ -1,7 +1,9 @@
 from json import loads
 from json.decoder import JSONDecodeError
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
+
 from src.output import output
 from src.sentinel import sentinel
 from src.str_diff import get_diff as get_str_diff

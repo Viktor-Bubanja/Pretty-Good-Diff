@@ -1,3 +1,6 @@
+from itertools import zip_longest
+
+
 def get_diff(first_str: str, second_str: str) -> list[str]:
     first_option = _calculate_diff(first_str, second_str)
     second_option = _calculate_diff(second_str, first_str)
@@ -6,10 +9,36 @@ def get_diff(first_str: str, second_str: str) -> list[str]:
         return sum([len(sub[0]) for sub in substrings])
 
     if len_matching_substrings(first_option) > len_matching_substrings(second_option):
-        return first_option
+        diff = first_option
     else:
         second_option = [(sub[1], sub[0]) for sub in second_option]
-        return second_option
+        diff = second_option
+
+    return _convert_diff_to_substrings(first_str, second_str, diff)
+
+
+def _convert_diff_to_substrings(
+    first_str: str, second_str: str, diff: list[str]
+) -> list[str]:
+    first_str_diff = [substring_indexes[0] for substring_indexes in diff]
+    second_str_diff = [substring_indexes[1] for substring_indexes in diff]
+    first_substrings = _calculate_substrings(first_str, first_str_diff)
+    second_substrings = _calculate_substrings(second_str, second_str_diff)
+    return list(zip_longest(first_substrings, second_substrings, fillvalue=""))
+
+
+def _calculate_substrings(string: str, substring_indexes: list[str]) -> list[str]:
+    substrings = []
+    lowest_index = 0
+    highest_index = len(string) - 1
+    for indexes in substring_indexes:
+        substring = string[lowest_index : indexes[0]]
+        substrings.append(substring)
+        lowest_index = indexes[-1] + 1
+        substrings.append(string[indexes[0] : indexes[-1] + 1])
+    if indexes[-1] < highest_index:
+        substrings.append(string[indexes[-1] + 1 : highest_index + 1])
+    return substrings
 
 
 def _calculate_diff(first_str: str, second_str: str) -> list[str]:

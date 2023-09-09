@@ -1,7 +1,9 @@
 import json
 from typing import Optional
-from src.diff import get_diff, print_diff
+
 from pydantic import BaseModel
+
+from src.diff import get_diff, print_diff
 from src.sentinel import sentinel
 
 
