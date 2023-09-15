@@ -13,12 +13,13 @@ def test_output_with_string_difference():
     output(first_str, second_str, difference)
 
 
-def test_output_with_nested_dictionary_with_string_difference_and_matching_substring_argument_true():
+def test_output_with_nested_dictionary_with_string_difference():
     first_dict = {
         "id": "12345",
         "location": {
             "street_name": "Totally real street name",
             "street_number": "27",
+            "city": "Berlin",
         },
         "description": {
             "en": None,
