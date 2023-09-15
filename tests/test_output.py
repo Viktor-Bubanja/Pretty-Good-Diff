@@ -1,3 +1,7 @@
+"""
+These tests do not have any assertions, they are just used to manually check
+what the output looks like.
+"""
 from src.diff import get_diff
 from src.output import output
 
@@ -6,7 +10,7 @@ def test_output_with_string_difference():
     first_str = "Some really long string that has a couple of differences."
     second_str = "Some rlly long string thathas a couple of differences."
     difference = get_diff(first_str, second_str)
-    output(difference)
+    output(first_str, second_str, difference)
 
 
 def test_output_with_nested_dictionary_with_string_difference_and_matching_substring_argument_true():
@@ -34,5 +38,5 @@ def test_output_with_nested_dictionary_with_string_difference_and_matching_subst
         },
     }
 
-    diff = get_diff(first_dict, second_dict, matching_substrings=True)
-    output(diff, matching_substrings=True)
+    diff = get_diff(first_dict, second_dict)
+    output(first_dict, second_dict, diff)
