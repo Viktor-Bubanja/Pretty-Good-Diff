@@ -21,12 +21,6 @@ def get_diff(first_object, second_object):
     input_type = type(first_object)
     assert input_type == type(second_object)
 
-    try:
-        first_object, second_object = first_object.dict(), second_object.dict()
-        input_type = type(first_object)
-    except AttributeError:
-        pass
-
     if input_type == dict:
         return _get_dict_diff(first_object, second_object, {})
     elif input_type == str:

@@ -20,7 +20,7 @@ def test_get_diff_finds_differences_in_json_objects():
     assert difference == expected_difference
 
 
-def test_get_diff_finds_differences_in_nested_pydantic_objects():
+def test_get_diff_finds_differences_in_nested_pydantic_objects_converted_to_dicts():
     class SomeNestedClass(BaseModel):
         c: str
         d: int
@@ -33,7 +33,7 @@ def test_get_diff_finds_differences_in_nested_pydantic_objects():
     obj_1 = SomeClass(a="abc", b=SomeNestedClass(c="xyz", d=123, e="xxx"))
     obj_2 = SomeClass(a="tuv", b=SomeNestedClass(c="yza", d=123))
 
-    difference = get_diff(obj_1, obj_2)
+    difference = get_diff(obj_1.dict(), obj_2.dict())
     expected_difference = {
         "a": [],
         "b": {"c": [(1, 0), (2, 1)], "e": ("xxx", None)},
