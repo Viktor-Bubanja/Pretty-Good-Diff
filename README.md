@@ -1,6 +1,9 @@
 # Pretty Good Diff
 
-Pretty Good Diff is a tool that allows users to compare two objects and see a highlight of the differences between them. It works with strings, dictionaries, and Pydantic objects.
+This tool allows developers to compare two objects and see a highlight of the differences between them. It works with strings and dictionaries.
+This project was made to help me fix unit tests with failing assertions quicker, especially when the objects are huge or very nested and complicated.
+I simply call `show_diff` on the two objects before an assert statement.
+It's not outstanding, but it's pretty good.
 
 ## show_diff
 
