@@ -1,8 +1,6 @@
 from json import loads
 from json.decoder import JSONDecodeError
 
-from pydantic import BaseModel
-
 from src.output import output
 from src.sentinel import sentinel
 from src.str_diff import get_diff as get_str_diff
@@ -23,11 +21,14 @@ def get_diff(first_object, second_object):
     input_type = type(first_object)
     assert input_type == type(second_object)
 
+    try:
+        first_object, second_object = first_object.dict(), second_object.dict()
+        input_type = type(first_object)
+    except AttributeError:
+        pass
+
     if input_type == dict:
         return _get_dict_diff(first_object, second_object, {})
-    elif isinstance(first_object, BaseModel):
-        first_dict, second_dict = first_object.dict(), second_object.dict()
-        return _get_dict_diff(first_dict, second_dict, {})
     elif input_type == str:
         if first_object.isnumeric() or second_object.isnumeric():
             return get_str_diff(first_object, second_object)
