@@ -30,6 +30,9 @@ def get_diff(first_object, second_object):
     if input_type == dict:
         return _get_dict_diff(first_object, second_object, {})
     elif input_type == str:
+        # Since strings like '123' are converted to ints by json.loads and
+        # we want to avoid passing ints to _get_dict_diff, we perform this check
+        # first so we can use get_str_diff instead.
         if first_object.isnumeric() or second_object.isnumeric():
             return get_str_diff(first_object, second_object)
         try:
