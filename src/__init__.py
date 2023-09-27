@@ -1,1 +1,1 @@
-from src.diff import get_diff, show_diff
+from src.output import show_diff

@@ -1,10 +1,19 @@
 from src.colors import *
+from src.diff import get_diff
 from src.sentinel import sentinel
 
 INDENT_SIZE = 4
 
 
-def output(first_object, second_object, diff):
+def show_diff(first_object, second_object):
+    """
+    Given two objects of the same type, print the differences between them.
+    """
+    diff = get_diff(first_object, second_object)
+    _output(first_object, second_object, diff)
+
+
+def _output(first_object, second_object, diff):
     """
     Given two objects and the difference between them, output the difference to the console.
     """
