@@ -1,6 +1,7 @@
 from json import loads
 from json.decoder import JSONDecodeError
 
+from src.exceptions import InputTypesMismatchError
 from src.sentinel import sentinel
 
 
@@ -8,9 +9,12 @@ def get_diff(first_object, second_object):
     """
     Given two objects of the same type, return an internal representation of the differences between them.
     """
-    input_type = type(first_object)
-    assert input_type == type(second_object)
+    if type(first_object) is not type(second_object):
+        raise InputTypesMismatchError(
+            "The types of the two input objects must be the same"
+        )
 
+    input_type = type(first_object)
     if input_type == dict:
         return _get_dict_diff(first_object, second_object, {})
     elif input_type == str:

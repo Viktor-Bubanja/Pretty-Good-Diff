@@ -1,0 +1,2 @@
+class InputTypesMismatchError(Exception):
+    pass

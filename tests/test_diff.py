@@ -229,3 +229,8 @@ def test_get_diff_correctly_identifies_differences_in_strings(
 ):
     difference = get_diff(first_str, second_str)
     assert difference == expected_diff
+
+
+def test_get_diff_raises_input_types_mismatch_error_when_given_objects_of_different_types():
+    with pytest.raises(Exception):
+        get_diff({"a": 1}, "a")
