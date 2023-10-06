@@ -33,8 +33,16 @@ def test_output_with_nested_dictionary_with_string_difference():
         },
         "description": {
             "en": None,
-            "de": "Some really really long description that is different How am I meant to see that a full stop is missing if it's not red?",
+            "de": "Some reaaaaaaaally long description that is different How am I meant to see that a full stop is missing if it's not red?",
         },
         "summary": "Some verbose text that is identical in both texts and definitely doesn't need to be displayed in the output.",
     }
     show_diff(first_dict, second_dict)
+
+
+def test_output_with_equivalent_dictionaries():
+    show_diff({"a": 1}, {"a": 1})
+
+
+def test_output_with_equivalent_strings():
+    show_diff("a", "a")

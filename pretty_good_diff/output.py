@@ -10,22 +10,11 @@ def show_diff(first_object, second_object):
     Given two objects of the same type, print the differences between them.
     """
     diff = get_diff(first_object, second_object)
-    _output(first_object, second_object, diff)
-
-
-def _output(first_object, second_object, diff):
-    """
-    Given two objects and the difference between them, output the difference to the console.
-    """
-    if not diff:
-        print(f"\n{_colored_output('The two objects are identical.', PALE_GREEN)}")
-        return
-    print(
-        f"\n{_colored_output('actual', BLUE_BACKGROUND)} vs {_colored_output('expected', PURPLE_BACKGROUND)}\n\n"
-    )
-    if type(diff) == dict:
+    if not diff or first_object == second_object:
+        print(f"\n{_colored_output('The two objects are identical.', PALE_GREEN)}\n")
+    elif type(diff) == dict:
         _output_dict_diff(first_object, second_object, diff, 0)
-    if type(diff) == list:
+    elif type(diff) == list:
         _output_str_diff(first_object, second_object, diff)
 
 
