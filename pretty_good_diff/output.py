@@ -1,6 +1,6 @@
-from src.colors import *
-from src.diff import get_diff
-from src.sentinel import sentinel
+from pretty_good_diff.colors import *
+from pretty_good_diff.diff import get_diff
+from pretty_good_diff.sentinel import sentinel
 
 INDENT_SIZE = 4
 
@@ -46,6 +46,8 @@ def _output_dict_diff(first_object, second_object, diff, indent=0):
                 indent=indent + INDENT_SIZE,
             )
         else:
+            print(indent * " " + _colored_output(key, YELLOW))
+            indent_for_values = indent + INDENT_SIZE
             first_obj, second_obj = value
             actual_output = (
                 missing_message
@@ -57,11 +59,8 @@ def _output_dict_diff(first_object, second_object, diff, indent=0):
                 if second_obj is sentinel
                 else _colored_output(second_obj, PURPLE_BACKGROUND)
             )
-
-            out_string = "{}: {} {}".format(
-                _colored_output(key, YELLOW), actual_output, expected_output
-            )
-            print(indent * " " + out_string)
+            print(indent_for_values * " " + actual_output)
+            print(indent_for_values * " " + expected_output)
 
 
 def _output_str_diff(first_str, second_str, index_pairs, indent=0):

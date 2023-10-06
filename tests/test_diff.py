@@ -4,8 +4,9 @@ from typing import Optional
 import pytest
 from pydantic import BaseModel
 
-from src.diff import get_diff
-from src.sentinel import sentinel
+from pretty_good_diff.diff import get_diff
+from pretty_good_diff.sentinel import sentinel
+
 
 
 def test_get_diff_finds_differences_in_json_objects():

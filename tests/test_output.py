@@ -2,7 +2,7 @@
 These tests do not have any assertions, they are just used to manually check
 what the output looks like.
 """
-from src.output import show_diff
+from pretty_good_diff.output import show_diff
 
 
 def test_output_with_string_difference():

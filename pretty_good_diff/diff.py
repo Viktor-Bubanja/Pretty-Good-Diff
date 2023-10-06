@@ -1,8 +1,8 @@
 from json import loads
 from json.decoder import JSONDecodeError
 
-from src.exceptions import InputTypesMismatchError
-from src.sentinel import sentinel
+from pretty_good_diff.exceptions import InputTypesMismatchError
+from pretty_good_diff.sentinel import sentinel
 
 
 def get_diff(first_object, second_object):
