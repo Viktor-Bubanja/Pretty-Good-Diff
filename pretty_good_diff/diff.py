@@ -110,7 +110,7 @@ def _calculate_separatedness(mapped_indexes):
     """
     We want to prioritise pairing up indexes so that substrings are grouped together
     as much as possible. For example, if we have the following two strings:
-    first_str: AXBXCXABC
+    first_str: AXBXCABC
     second_str: ABCXXXXX
     We want to map the "ABC" from the end of the first string to the "ABC" in the second string
     instead of mapping each of the letters "A", "B", and "C" individually.
