@@ -10,7 +10,7 @@ Import the `show_diff` method like `from pretty_good_diff import show_diff`.
 Then, call `show_diff(first_object, second_object)` to see a colored diff of the input objects. `first_object` and `second_object` need to have the same type and be either `str` or `dict` objects.
 
 Before:
-![alt text](https://github.com/Viktor-Bubanja/pretty-good-diff/blob/main/blob/ugly_diff.png)
+![alt text](https://github.com/Viktor-Bubanja/pretty-good-diff/raw/main/blob/ugly_diff.png)
 
 After:
-![alt text](https://github.com/Viktor-Bubanja/pretty-good-diff/blob/main/blob/pretty_good_diff.png)
+![alt text](https://github.com/Viktor-Bubanja/pretty-good-diff/raw/main/blob/pretty_good_diff.png)
