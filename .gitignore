@@ -1,0 +1,6 @@
+venv
+__pycache__/
+*/__pycache__/
+dist/
+pretty_good_diff.egg-info/
+.DS_Store
