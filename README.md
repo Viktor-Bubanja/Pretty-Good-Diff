@@ -6,7 +6,9 @@ I simply call `show_diff` on the two objects before an assert statement (note: i
 
 **How to use**
 
-Import the `show_diff` method like `from pretty_good_diff import show_diff`.
+To install, simply run `pip install pretty_good_diff` in your terminal.
+
+Once installed, you can import the `show_diff` method like `from pretty_good_diff import show_diff`.
 
 Then, call `show_diff(first_object, second_object)` to see a colored diff of the input objects. `first_object` and `second_object` need to have the same type and be either `str` or `dict` objects.
 
